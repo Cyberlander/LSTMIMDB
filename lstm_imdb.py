@@ -6,6 +6,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
 import argparse
+from datetime import datetime
 
 class LSTMIMDB(nn.Module):
     def __init__(self, hidden_dim, embedding_dim):
@@ -41,7 +42,7 @@ def accuracy_on_test_set( x_test, y_test ):
         if predicted_value = target_value:
             right_answers += 1
     accuracy = right_answers / len(x_test)
-    print( "Accuracy on test set: ", accuracy)    
+    print( "Accuracy on test set: ", accuracy)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -62,6 +63,7 @@ if __name__ == "__main__":
 
     for i in range(epochs):
         loss_average = 0.0
+        start_time = datetime.now()
         for index, data_entry in enumerate(X_train):
             data_entry = np.array( data_entry )
             data_entry = data_entry.astype(np.int32)
@@ -80,3 +82,5 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
         print( "Average loss: ", (loss_average/len(X_train)))
+        time_elapsed = datetime.now() - start_time
+        print("Time elapsed {}".format(time_elapsed))
