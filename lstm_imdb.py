@@ -25,6 +25,24 @@ class LSTMIMDB(nn.Module):
         return ( autograd.Variable(torch.zeros(1,1,self.hidden_dim)),
                  autograd.Variable(torch.zeros(1,1,self.hidden_dim)))
 
+def accuracy_on_test_set( x_test, y_test ):
+    right_answers = 0
+    for index, data_entry in enumerate(x_test):
+        data_entry = np.array(data_entry)
+        data_entry = data_entry.astype(np.int32)
+        data_entry = [ a.item() for a in data_entry ]
+        target_data = y_test[index].item()
+        input_data = autograd.Variable( torch.LongTensor(data_entry) )
+        target_data = autograd.Variable( torch.LongTensor(target_data))
+        hidden = lstm_imdb.init_hidden()
+        y_pred, _ = lstm_imdb(input_data, hidden)
+        value, predicted_index = torch.max( y_pred, 1 )
+        predicted_value = predicted_index.data.numpy()[0]
+        if predicted_value = target_value:
+            right_answers += 1
+    accuracy = right_answers / len(x_test)
+    print( "Accuracy on test set: ", accuracy)    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument( "--epochs", type=int, default=1)
